@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">L-Music</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <string name="local_music">本地音乐</string>
+    <string name="volume">音量:</string>
+    <string name="no_music">未获取到本地音乐</string>
+</resources>

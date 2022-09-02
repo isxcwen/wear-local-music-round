@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="showPlayInfo"
+            type="com.isxcwen.lmusic.model.ShowPlayInfo" />
+    </data>
+
+    <androidx.wear.widget.BoxInsetLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/box_inset_layout_padding"
+        tools:context=".activity.MainActivity"
+        tools:deviceIds="wear">
+
+        <FrameLayout
+            android:id="@+id/music_title"
+            android:layout_width="160dp"
+            android:layout_gravity="center|top"
+            android:layout_marginTop="10dp"
+            android:layout_height="55dp"
+            android:orientation="horizontal">
+            <!--android:layout_gravity="center|top"-->
+            <!--android:text="@{showPlayInfo.musicName}"-->
+            <TextView
+                android:id="@+id/current_music_name"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="@{showPlayInfo.musicName}"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/current_sing_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:text="@{showPlayInfo.singName}"/>
+        </FrameLayout>
+
+
+
+       <!-- app:progColor="#20AEFF"-->
+        <!--app:progFirstColor="#20AEFF"
+        app:progStartColor="#00102B"-->
+        <!--^蓝 >粉红-->
+        <!--app:progFirstColor="#FFDAF3"
+        app:progStartColor="#45002E"-->
+        <com.isxcwen.lmusic.view.CircleProgressView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:backWidth="5dp"
+            app:backColor="#E1151515"
+            app:progFirstColor="#20AEFF"
+            app:progStartColor="#00102B"
+            app:progWidth="5dp"
+            app:progress="@{showPlayInfo.process}" />
+       <!-- <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/inner_frame_layout_padding"
+            app:layout_boxedEdges="all">-->
+
+         <!--</FrameLayout>-->
+
+            <!--<ImageView
+                android:id="@+id/pause"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:visibility='@{showPlayInfo.pauseBtn?0:8}'
+                android:layout_gravity="center"
+                android:src="@drawable/ico_pause"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:onClick="test"
+                />-->
+            <!--8隐藏 0展示-->
+        <!--android:visibility='@{showPlayInfo.playBtn?0:8}'-->
+        <!--android:src="@drawable/ico_play"-->
+            <ImageView
+                android:id="@+id/play"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:src="@{showPlayInfo.playBtn?@drawable/ico_play:@drawable/ico_pause}"
+                android:background="?android:selectableItemBackgroundBorderless"
+                />
+
+            <ImageView
+                android:id="@+id/previous"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:visibility='@{showPlayInfo.previousBtn?0:8}'
+                android:layout_gravity="left|center_vertical"
+                android:src="@drawable/ico_previous"
+                android:layout_marginLeft="15dp"
+                android:background="?android:selectableItemBackgroundBorderless"
+                />
+
+            <ImageView
+                android:id="@+id/next"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:visibility='@{showPlayInfo.nextBtn?0:8}'
+                android:layout_gravity="right|center_vertical"
+                android:src="@drawable/ico_next"
+                android:layout_marginRight="15dp"
+                android:background="?android:selectableItemBackgroundBorderless"
+                />
+
+            <ImageView
+                android:id="@+id/volume"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginBottom="30dp"
+                android:layout_gravity="bottom|left"
+                android:visibility='@{showPlayInfo.volumeBtn?0:8}'
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:src="@drawable/ico_volume" />
+
+            <ImageView
+                android:id="@+id/queue"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="60dp"
+                android:layout_marginBottom="30dp"
+                android:visibility='@{showPlayInfo.queueBtn?0:8}'
+                android:layout_gravity="bottom|right"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:src="@drawable/ico_queue" />
+    </androidx.wear.widget.BoxInsetLayout>
+</layout>

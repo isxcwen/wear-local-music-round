@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/box_inset_layout_padding"
+    tools:deviceIds="wear">
+
+<!--    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="80px"
+        android:src="@drawable/queue_title"
+        android:stateListAnimator="@null"
+        />-->
+    <TextView
+        android:id="@+id/no_music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_music"
+        android:visibility="gone"
+        android:textColor="@color/gray"
+        app:layout_boxedEdges="top|left" />
+
+    <androidx.wear.widget.WearableRecyclerView
+        android:id="@+id/circle_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:listitem="@layout/music_list_item"
+        />
+
+</androidx.wear.widget.BoxInsetLayout>
