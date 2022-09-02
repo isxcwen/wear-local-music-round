@@ -3,7 +3,7 @@
 `使用google MediaSession框架，完全兼容安卓设备`
 
 # 界面
-![](C:/Users/isxc.wen/Desktop/123.png)
+![img_2.png](img_2.png)
 
 ## 设计
 ![img.png](img.png)
