@@ -19,9 +19,6 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
         <activity
-            android:name=".NullActivity"
-            android:exported="false" />
-        <activity
             android:name=".activity.VolumeActivity"
             android:exported="false"
             android:theme="@style/translucent" />
