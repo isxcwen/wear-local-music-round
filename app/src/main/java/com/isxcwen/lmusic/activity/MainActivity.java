@@ -52,6 +52,7 @@ public class MainActivity extends MediaBrowserActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        System.out.println(Thread.currentThread().getId());
         TaskComponet.lock("server");
     }
 
@@ -66,6 +67,8 @@ public class MainActivity extends MediaBrowserActivity {
         if(mediaBorwserServerIntent != null && !showPlayInfo.isPlay()){
             stopService(mediaBorwserServerIntent);
         }
+        binding = null;
+        showPlayInfo = null;
     }
 
     @Override
@@ -73,6 +76,9 @@ public class MainActivity extends MediaBrowserActivity {
         super.connectSuccess();
         //LogUtils.print("链接MediaBrowserService成功", this);
         showPlayInfo.updateStatus(mediaControllerCompat.getPlaybackState());
+        if(showPlayInfo.isPlay()){
+            TaskComponet.unLock("server");
+        }
         showPlayInfo.updateMetaData(mediaControllerCompat.getMetadata());
     }
 

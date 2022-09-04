@@ -62,8 +62,8 @@ public class MusicService extends MediaBrowserServiceCompat {
         super.onCreate();
         //LogUtils.print("onCreate", this);
         //创建mediaSession
-        LogUtils.showToast(this, "获取音乐中...", LENGTH_SHORT);
-        mediaSessionComponet = new MediaSessionComponet(this, new MySessionCallback());
+        LogUtils.showToast(getApplication(), "获取音乐中...", LENGTH_SHORT);
+        mediaSessionComponet = new MediaSessionComponet(getApplication(), new MySessionCallback());
         MediaControllerCompat controller = mediaSessionComponet.getController();
         //设置session才会生效
         setSessionToken(mediaSessionComponet.getSessionToken());
@@ -73,7 +73,7 @@ public class MusicService extends MediaBrowserServiceCompat {
         basePlayer.setController(controller);
 
         //设置声音管理
-        audioComponet = new AudioComponet(this, controller);
+        audioComponet = new AudioComponet(getApplication(), controller);
 
         wearNotifyComponet = new WearNotifyComponet(this, mediaSessionComponet.getSessionToken(), mediaSessionComponet.getCurrentPlayInfo());
         //初始化进度条task
@@ -126,13 +126,13 @@ public class MusicService extends MediaBrowserServiceCompat {
                 mediaSessionComponet.notifyPlayInfoChange(PlaybackStateCompat.STATE_PLAYING);
                 //LogUtils.print("MusicService 开启通知");
                 wearNotifyComponet.showForegroundNotify(MusicService.this, mediaSessionComponet.getCurrentPlayInfo());
-                audioComponet.registerBecomingNoisyReceiver(MusicService.this);
+                audioComponet.registerBecomingNoisyReceiver(getApplication());
             })) {
                 //成功
             }else{
                 //失败
                 //LogUtils.print("暂停失败", MusicService.this);
-                LogUtils.showToast(MusicService.this, "播放失败，下一首", LENGTH_SHORT);
+                LogUtils.showToast(getApplication(), "播放失败，下一首", LENGTH_SHORT);
                 mediaSessionComponet.getController().getTransportControls().skipToNext();
             }
         }
@@ -147,13 +147,13 @@ public class MusicService extends MediaBrowserServiceCompat {
                 mediaSessionComponet.notifyPlayInfoChange(PlaybackStateCompat.STATE_PLAYING, 0, index);
                 //LogUtils.print("MusicService 开启通知");
                 wearNotifyComponet.showForegroundNotify(MusicService.this, mediaSessionComponet.getCurrentPlayInfo());
-                audioComponet.registerBecomingNoisyReceiver(MusicService.this);
+                audioComponet.registerBecomingNoisyReceiver(getApplication());
             })) {
                 //成功
             }else{
                 //失败
                 //LogUtils.print("暂停失败", MusicService.this);
-                LogUtils.showToast(MusicService.this, "播放失败，下一首", LENGTH_SHORT);
+                LogUtils.showToast(getApplication(), "播放失败，下一首", LENGTH_SHORT);
                 mediaSessionComponet.getController().getTransportControls().skipToNext();
             }
         }
@@ -164,11 +164,11 @@ public class MusicService extends MediaBrowserServiceCompat {
             if(pauseMusic()){
                 //保存音乐进度
                 int position = basePlayer.getPosition(mediaSessionComponet.getMediaMetadataCompat());
-                mediaSessionComponet.trySaveLastPlayInfo(MusicService.this, position);
+                mediaSessionComponet.trySaveLastPlayInfo(getApplication(), position);
                 //更新状态
                 mediaSessionComponet.notifyPlayInfoChange(PlaybackStateCompat.STATE_PAUSED, position);
                 wearNotifyComponet.cancleForegroundNotify(MusicService.this);
-                audioComponet.unRegisterBecomingNoisyReceiver(MusicService.this);
+                audioComponet.unRegisterBecomingNoisyReceiver(getApplication());
             }else {
                 //LogUtils.print("暂停失败", MusicService.this);
             }
@@ -202,7 +202,7 @@ public class MusicService extends MediaBrowserServiceCompat {
             if (playMusic(mediaMetadataCompat, player -> {
                 //更新播放状态 进度置为0
                 mediaSessionComponet.notifyPlayInfoChange(PlaybackStateCompat.STATE_PLAYING, 0, targetId);
-                mediaSessionComponet.trySaveLastPlayInfo(MusicService.this, 0);
+                mediaSessionComponet.trySaveLastPlayInfo(getApplication(), 0);
                 //LogUtils.print("MusicService 更新通知");
                 wearNotifyComponet.showForegroundNotify(MusicService.this, mediaSessionComponet.getCurrentPlayInfo());
             })) {
@@ -211,7 +211,7 @@ public class MusicService extends MediaBrowserServiceCompat {
         } else {
             //更新播放状态 进度置为0
             mediaSessionComponet.notifyPlayInfoChange(PlaybackStateCompat.STATE_PAUSED, 0, targetId);
-            mediaSessionComponet.trySaveLastPlayInfo(MusicService.this, 0);
+            mediaSessionComponet.trySaveLastPlayInfo(getApplication(), 0);
             //LogUtils.print("MusicService 更新通知");
             //wearNotifyComponet.showNotify(MusicService.this, mediaSessionComponet.getCurrentPlayInfo());
         }
@@ -235,7 +235,7 @@ public class MusicService extends MediaBrowserServiceCompat {
     private boolean playMusic(MediaMetadataCompat mediaMetadataCompat, Long position, Consumer<BasePlayer> callback) {
         if (mediaMetadataCompat != null) {
             //检查设备 申请焦点;
-            if (audioComponet.checkDeviceVolume(this) && audioComponet.requestAudioFocus()) {
+            if (audioComponet.checkDeviceVolume(getApplication()) && audioComponet.requestAudioFocus()) {
                 if (position == null ? basePlayer.play(mediaMetadataCompat, callback) : basePlayer.play(mediaMetadataCompat, position, callback)) {
                     //LogUtils.print("MusicService 开启服务");
                     //startService(new Intent(getApplication(), MusicService.class));
@@ -258,7 +258,7 @@ public class MusicService extends MediaBrowserServiceCompat {
         //LogUtils.print("onDestroy", this);
         try {
             if(mediaSessionComponet != null){
-                mediaSessionComponet.trySaveLastPlayInfo(this, basePlayer.getPosition(mediaSessionComponet.getMediaMetadataCompat()));
+                mediaSessionComponet.trySaveLastPlayInfo(getApplication(), basePlayer.getPosition(mediaSessionComponet.getMediaMetadataCompat()));
                 mediaSessionComponet.destory(this);
                 mediaSessionComponet = null;
             }

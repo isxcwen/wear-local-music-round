@@ -60,8 +60,8 @@ public class AudioComponet {
         volumeFixed = audioManager.isVolumeFixed();
     }
 
-    public AudioComponet(Service service, MediaControllerCompat controllerCompat) {
-        this.audioManager = (AudioManager) service.getSystemService(Context.AUDIO_SERVICE);
+    public AudioComponet(Context context, MediaControllerCompat controllerCompat) {
+        this.audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         this.mediaController = controllerCompat;
         audioFocusRequest = initAudioFocusRequest();
         //audioDeviceCallback = gengrateCallback();
@@ -258,20 +258,20 @@ public class AudioComponet {
         }
     }
 
-    public void registerBecomingNoisyReceiver(Service service){
+    public void registerBecomingNoisyReceiver(Context context){
         if(!registedBecoming){
             registedBecoming = true;
             initBecomeReceiver();
             initBecomingIntent();
-            service.registerReceiver(becomingNoisyReceiver, becomingIntent);
+            context.registerReceiver(becomingNoisyReceiver, becomingIntent);
         }
     }
 
-    public void unRegisterBecomingNoisyReceiver(Service service){
+    public void unRegisterBecomingNoisyReceiver(Context context){
         if(registedBecoming){
             registedBecoming = false;
             initBecomeReceiver();
-            service.unregisterReceiver(becomingNoisyReceiver);
+            context.unregisterReceiver(becomingNoisyReceiver);
         }
     }
 

@@ -49,15 +49,15 @@ public class MediaSessionComponet {
 
     private Bundle bundle;
 
-    public MediaSessionComponet(Service service, MediaSessionCompat.Callback callback){
+    public MediaSessionComponet(Context context, MediaSessionCompat.Callback callback){
         bundle = new Bundle();
-        initSession(service, callback);
+        initSession(context, callback);
     }
 
-    public void initSession(Service service, MediaSessionCompat.Callback callback){
+    public void initSession(Context context, MediaSessionCompat.Callback callback){
         //创建mediaSession
-        ComponentName componentName = new ComponentName(service, MusicService.class);
-        mediaSession = new MediaSessionCompat(service, service.getPackageName(), componentName, PendingIntent.getBroadcast(service, 1, new Intent(service, MediaButtonReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT));
+        ComponentName componentName = new ComponentName(context, MusicService.class);
+        mediaSession = new MediaSessionCompat(context, context.getPackageName(), componentName, PendingIntent.getBroadcast(context, 1, new Intent(context, MediaButtonReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT));
         //开启控制类型
         mediaSession.setFlags(
                 MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
@@ -66,7 +66,7 @@ public class MediaSessionComponet {
 
         playbackStateCompatBuild = new PlaybackStateCompat.Builder();
         //TaskComponet.register(() -> {
-            initMusic(service);
+            initMusic(context);
         //});
 
         //设置回调 通过控制器调用回调对应的方法

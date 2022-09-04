@@ -62,7 +62,7 @@ public class MusicQueueActivity extends MediaBrowserActivity {
 
     private void initWearableRecyclerView(){
         //如果想要自适应手表表盘请使用WearableLinearLayoutManager，如果不需要适配表盘可以使用LinearLayoutManager
-        wearableRecyclerView.setLayoutManager(new WearableLinearLayoutManager(this));
+        wearableRecyclerView.setLayoutManager(new WearableLinearLayoutManager(getApplication()));
         //第一个列表项和最后一个列表项在屏幕上垂直居中对齐
         wearableRecyclerView.setEdgeItemsCenteringEnabled(true);
         //是否可以使用圆形滚动手势
@@ -81,7 +81,7 @@ public class MusicQueueActivity extends MediaBrowserActivity {
                 // Don't forget the negation here
                 float delta = -ev.getAxisValue(MotionEventCompat.AXIS_SCROLL) *
                         ViewConfigurationCompat.getScaledVerticalScrollFactor(
-                                ViewConfiguration.get(MusicQueueActivity.this), MusicQueueActivity.this
+                                ViewConfiguration.get(getApplication()), getApplication()
                         );
 
                 // Swap these axes to scroll horizontally instead

@@ -28,6 +28,7 @@ import com.isxcwen.lmusic.utils.LogUtils;
 public abstract class MediaBrowserActivity extends Activity {
     protected MediaBrowserCompat mediaBrowser;
     protected MediaControllerCompat mediaControllerCompat;
+    protected MediaControllerCompat.Callback controllerCallback;
     protected DisplayManager displayManager;
     protected Intent mediaBorwserServerIntent;
 
@@ -83,23 +84,30 @@ public abstract class MediaBrowserActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        //LogUtils.print("onDestroy", this);
         super.onDestroy();
-        //LogUtils.print("开始销毁MediaBrowserService链接", this);
-        if(mediaBrowser != null){
+        if(mediaBrowser != null && mediaBrowser.isConnected()){
             try {
+                mediaBrowser.unsubscribe(mediaBrowser.getRoot());
                 mediaBrowser.disconnect();
+                //mediaBrowser = null;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        if(mediaControllerCompat !=null && controllerCallback != null){
+            mediaControllerCompat.unregisterCallback(controllerCallback);
+        }
+        mediaControllerCompat = null;
+        displayManager = null;
+        mediaBorwserServerIntent = null;
+        System.gc();
     }
 
     protected void checkpermissionAndInitMusicService() {
         if (needApplayPermission()) {
             //LogUtils.print("%s 申请权限", this);
             //请求权限后回调链接
-            this.requestPermissions(ConstantsUtil.PERMISSIONS, 1);
+            requestPermissions(ConstantsUtil.PERMISSIONS, 1);
         } else {
             //直接链接
             initMusicService();
@@ -116,7 +124,7 @@ public abstract class MediaBrowserActivity extends Activity {
 
     private boolean needApplayPermission() {
         for (String permission : ConstantsUtil.PERMISSIONS) {
-            if (this.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+            if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
                 return true;
             }
         }
@@ -128,7 +136,7 @@ public abstract class MediaBrowserActivity extends Activity {
         initMediaBrowser();
         //todo 是否需要启动
         if (needStartServer()) {
-            mediaBorwserServerIntent = new Intent(this, MusicService.class);
+            mediaBorwserServerIntent = new Intent(getApplication(), MusicService.class);
             //startService(mediaBorwserServerIntent);
             startForegroundService(mediaBorwserServerIntent);
         }
@@ -139,8 +147,8 @@ public abstract class MediaBrowserActivity extends Activity {
     }
 
     private void initMediaBrowser() {
-        mediaBrowser = new MediaBrowserCompat(this,
-                new ComponentName(this, MusicService.class),
+        mediaBrowser = new MediaBrowserCompat(getApplication(),
+                new ComponentName(getApplication(), MusicService.class),
                 new MediaBrowserCompat.ConnectionCallback() {
                     @Override
                     public void onConnected() {
@@ -148,9 +156,9 @@ public abstract class MediaBrowserActivity extends Activity {
                         //LogUtils.print("%s 链接MediaBrowserServer成功", MediaBrowserActivity.this);
                         initController();
 
-                        MediaControllerCompat.Callback callback = generateMediaControllerCallback();
-                        if (callback != null) {
-                            mediaControllerCompat.registerCallback(callback);
+                        controllerCallback = generateMediaControllerCallback();
+                        if (controllerCallback != null) {
+                            mediaControllerCompat.registerCallback(controllerCallback);
                         }
                         //需要先取消注册在注册  bug
                         MediaBrowserCompat.SubscriptionCallback subscriptionCallback = generateMediaBrowserCompatSubscriptionCallback();
@@ -178,7 +186,7 @@ public abstract class MediaBrowserActivity extends Activity {
         try {
             //获取控制器
             MediaSessionCompat.Token token = mediaBrowser.getSessionToken();
-            mediaControllerCompat = new MediaControllerCompat(this, token);
+            mediaControllerCompat = new MediaControllerCompat(getApplication(), token);
             //保存控制器
         } catch (RemoteException e) {
             e.printStackTrace();

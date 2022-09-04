@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
         <activity
-            android:name=".MusicProcessActivity"
+            android:name=".NullActivity"
             android:exported="false" />
         <activity
             android:name=".activity.VolumeActivity"

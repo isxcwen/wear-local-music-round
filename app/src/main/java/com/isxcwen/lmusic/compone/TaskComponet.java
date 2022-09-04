@@ -2,9 +2,11 @@ package com.isxcwen.lmusic.compone;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class TaskComponet {
@@ -22,9 +24,16 @@ public class TaskComponet {
     public static void unLock(String key){
         ReentrantLock reentrantLock = locks.get(key);
         if(reentrantLock !=null && reentrantLock.isLocked()){
+            unlock(reentrantLock);
+        }
+    }
+
+    private static void unlock(ReentrantLock reentrantLock){
+        while (reentrantLock.isLocked()){
             reentrantLock.unlock();
         }
     }
+
     public static void init() {
         if(service == null){
             service = new ScheduledThreadPoolExecutor(5, TaskComponet::createThread);
